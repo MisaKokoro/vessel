@@ -1,0 +1,4 @@
+syntax = "proto3";
+message mData{
+    map<int32,int32> mp =1;
+}

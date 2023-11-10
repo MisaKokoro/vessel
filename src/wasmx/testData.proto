@@ -1,0 +1,19 @@
+syntax = "proto3";
+message Person{
+   string name = 1;
+}
+
+message Array {
+   repeated int32 arr = 1;
+}
+
+message ArrayDouble {
+    repeated double arr = 1;
+}
+
+message Person_Info {
+   string name = 1;
+   int32 age = 2;
+   double height = 3;
+   double weight = 4;
+}
