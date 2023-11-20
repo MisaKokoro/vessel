@@ -534,7 +534,7 @@ memory_instantiate(AOTModuleInstance *module_inst, AOTModule *module,
      * both i and memarg.offset are u32 in range 0 to 4G
      * so the range of ea is 0 to 8G
      */
-    if (!is_extern_mem) {
+    // if (!is_extern_mem) {
         if (!(p = mapped_mem =
                 os_mmap(NULL, map_size, MMAP_PROT_NONE, MMAP_MAP_NONE))) {
             set_error_buf(error_buf, error_buf_size, "mmap memory failed");
@@ -557,9 +557,9 @@ memory_instantiate(AOTModuleInstance *module_inst, AOTModule *module,
             os_munmap(mapped_mem, map_size);
             return NULL;
         }
-    } else {
-        p = P;
-    }
+    // } else {
+    //     p = P;
+    // }
         /* Newly allocated pages are filled with zero by the OS, we don't fill it
         * again here */
 #endif /* end of OS_ENABLE_HW_BOUND_CHECK */
@@ -771,12 +771,14 @@ memories_instantiate(AOTModuleInstance *module_inst, AOTModule *module,
 #endif
             return false;
         }
-
+        gettimeofday(&start_time, NULL);
         if (memory_inst->memory_data) {
             bh_memcpy_s((uint8 *)memory_inst->memory_data + base_offset,
                         memory_inst->memory_data_size - base_offset,
                         data_seg->bytes, length);
         }
+        gettimeofday(&end_time, NULL);
+        printf("memcopy inst cost %ld us\n",(end_time.tv_sec - start_time.tv_sec) * 1000000 + (end_time.tv_usec - start_time.tv_usec));
     }
 
     return true;
