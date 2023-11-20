@@ -1,10 +1,14 @@
 #include "wasmx/WamrManager.h"
 #include "util/ScopeTime.h"
+#include "util/log.h"
+#include "aot_runtime.h"
+namespace wasm {
 WamrManager::~WamrManager() {
     DestoryEnv_();
 }
 
 WamrManager::WamrManager(const std::string &wasm_path) : wasm_path_(wasm_path) {
+    SPDLOG_INFO("test for link");
     InitWamr_();
 }
 
@@ -125,4 +129,17 @@ wasm_module_inst_t WamrManager::InstFromModule() {
         std::abort();
     }
     return module_inst;
+}
+
+size_t WamrManager::getMemorySizeBytes() {
+    auto* aotModule = reinterpret_cast<AOTModuleInstance*>(module_inst_);
+    AOTMemoryInstance* aotMem = ((AOTMemoryInstance**)aotModule->memories)[0];
+    return aotMem->cur_page_count * 65536;
+}
+
+uint8_t* WamrManager::getMemoryBase() {
+    auto* aotModule = reinterpret_cast<AOTModuleInstance*>(module_inst_);
+    AOTMemoryInstance* aotMem = ((AOTMemoryInstance**)aotModule->memories)[0];
+    return reinterpret_cast<uint8_t*>(aotMem->memory_data);
+}
 }

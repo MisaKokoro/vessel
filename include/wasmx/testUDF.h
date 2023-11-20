@@ -7,6 +7,7 @@
 #include <string>
 #include "WamrManager.h"
 #include "struct.h"
+namespace wasm {
 class TestUDF {
 public:
     TestUDF( WamrManager *wamr_handle,int cnt = 1000000,int size = 1000, int mem_size = 10240) : cnt_(cnt),size_(size),mem_size_(mem_size),wamr_handle_(wamr_handle) {
@@ -40,3 +41,4 @@ private:
     int mem_size_;
     WamrManager *wamr_handle_;
 };
+}

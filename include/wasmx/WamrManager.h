@@ -16,6 +16,7 @@
 #include <string>
 #include <unordered_map>
 
+namespace wasm {
 class WamrManager {
     public:
         WamrManager(const std::string &wasm_path);
@@ -29,6 +30,10 @@ class WamrManager {
         void ModuleFree(uint32_t wasm_ptr);
         wasm_module_inst_t InstFromModule();
 
+        size_t getMemorySizeBytes();
+
+        uint8_t* getMemoryBase();
+
         ~WamrManager();
         
     private:
@@ -41,11 +46,12 @@ class WamrManager {
         RuntimeInitArgs         init_args_;
         std::string             wasm_path_;
 
-        char global_heap_buf_[1024 * 4096];
+        char global_heap_buf_[1024 * 1024];
         char error_buf_[128];
         std::unordered_map<std::string,wasm_function_inst_t> function_hashtable_;
     private:
         void InitWamr_();   
         void DestoryEnv_();
 };
+}
 
