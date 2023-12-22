@@ -44,7 +44,7 @@ uint8_t* SnapshotData::validatedOffsetPtr(uint32_t offset) {
     return data_.get() + offset;
 }
 
-void SnapshotData::writeData(std::span<const uint8_t> buffer, uint32_t offset) {
+void SnapshotData::writeData(std::span<const uint8_t> buffer, uint32_t offset/*= 0*/) {
     size_t regionEnd = offset + buffer.size();
     // Copy in new data
     uint8_t* copyTarget = validatedOffsetPtr(offset);

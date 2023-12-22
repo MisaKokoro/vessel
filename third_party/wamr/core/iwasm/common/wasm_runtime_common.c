@@ -2462,6 +2462,9 @@ wasm_runtime_init_wasi(WASMModuleInstanceCommon *module_inst,
     char *path, resolved_path[PATH_MAX];
     uint32 i;
 
+    struct timeval start_time;
+    struct timeval end_time;
+
     if (!(wasi_ctx = runtime_malloc(sizeof(WASIContext), NULL, error_buf,
                                     error_buf_size))) {
         return false;
@@ -2470,6 +2473,7 @@ wasm_runtime_init_wasi(WASMModuleInstanceCommon *module_inst,
     wasm_runtime_set_wasi_ctx(module_inst, wasi_ctx);
 
     /* process argv[0], trip the path and suffix, only keep the program name */
+    gettimeofday(&start_time, NULL);
     if (!copy_string_array((const char **)argv, argc, &argv_buf, &argv_list,
                            &argv_buf_size)) {
         set_error_buf(error_buf, error_buf_size,
@@ -2483,6 +2487,9 @@ wasm_runtime_init_wasi(WASMModuleInstanceCommon *module_inst,
                       "Init wasi environment failed: allocate memory failed");
         goto fail;
     }
+    gettimeofday(&end_time, NULL);
+    printf("wasi : copy argv and env cost %ld us\n",(end_time.tv_sec - start_time.tv_sec) * 1000000 + (end_time.tv_usec - start_time.tv_usec));
+
 
     if (!(curfds = wasm_runtime_malloc(sizeof(struct fd_table)))
         || !(prestats = wasm_runtime_malloc(sizeof(struct fd_prestats)))
@@ -2517,6 +2524,7 @@ wasm_runtime_init_wasi(WASMModuleInstanceCommon *module_inst,
                       "init argument environment failed");
         goto fail;
     }
+
     argv_environ_inited = true;
 
     if (!addr_pool_init(apool)) {
@@ -2528,6 +2536,7 @@ wasm_runtime_init_wasi(WASMModuleInstanceCommon *module_inst,
     addr_pool_inited = true;
 
     /* Prepopulate curfds with stdin, stdout, and stderr file descriptors. */
+    gettimeofday(&start_time, NULL);
     if (!fd_table_insert_existing(curfds, 0, (stdinfd != -1) ? stdinfd : 0)
         || !fd_table_insert_existing(curfds, 1, (stdoutfd != -1) ? stdoutfd : 1)
         || !fd_table_insert_existing(curfds, 2,
@@ -2536,6 +2545,9 @@ wasm_runtime_init_wasi(WASMModuleInstanceCommon *module_inst,
                       "Init wasi environment failed: init fd table failed");
         goto fail;
     }
+    gettimeofday(&end_time, NULL);
+    printf("wasi : curfds insert std init cost %ld us\n",(end_time.tv_sec - start_time.tv_sec) * 1000000 + (end_time.tv_usec - start_time.tv_usec));
+
 
     wasm_fd = 3;
     for (i = 0; i < dir_count; i++, wasm_fd++) {
@@ -2562,6 +2574,7 @@ wasm_runtime_init_wasi(WASMModuleInstanceCommon *module_inst,
     }
 
     /* addr_pool(textual) -> apool */
+    gettimeofday(&start_time, NULL);
     for (i = 0; i < addr_pool_size; i++) {
         char *cp, *address, *mask;
         bool ret = false;
@@ -2584,13 +2597,20 @@ wasm_runtime_init_wasi(WASMModuleInstanceCommon *module_inst,
             goto fail;
         }
     }
+    gettimeofday(&end_time, NULL);
+    printf("wasi : addrpool insert cost %ld us\n",(end_time.tv_sec - start_time.tv_sec) * 1000000 + (end_time.tv_usec - start_time.tv_usec));
 
+
+    gettimeofday(&start_time, NULL);
     if (!copy_string_array(ns_lookup_pool, ns_lookup_pool_size, &ns_lookup_buf,
                            &ns_lookup_list, NULL)) {
         set_error_buf(error_buf, error_buf_size,
                       "Init wasi environment failed: allocate memory failed");
         goto fail;
     }
+    gettimeofday(&end_time, NULL);
+    printf("wasi : copy ns pool cost %ld us\n",(end_time.tv_sec - start_time.tv_sec) * 1000000 + (end_time.tv_usec - start_time.tv_usec));
+
 
     wasi_ctx->curfds = curfds;
     wasi_ctx->prestats = prestats;

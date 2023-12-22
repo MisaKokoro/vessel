@@ -685,10 +685,15 @@ fd_table_insert_existing(struct fd_table *ft, __wasi_fd_t in, int out)
     __wasi_rights_t rights_base, rights_inheriting;
     struct fd_object *fo;
     __wasi_errno_t error;
+    struct timeval start_time;
+    struct timeval end_time;
 
+    gettimeofday(&start_time, NULL);
     if (fd_determine_type_rights(out, &type, &rights_base, &rights_inheriting)
         != 0)
         return false;
+    gettimeofday(&end_time, NULL);
+    printf("wasi : fd_determine cost %ld us\n",(end_time.tv_sec - start_time.tv_sec) * 1000000 + (end_time.tv_usec - start_time.tv_usec));
 
     error = fd_object_new(type, &fo);
     if (error != 0)
@@ -703,6 +708,7 @@ fd_table_insert_existing(struct fd_table *ft, __wasi_fd_t in, int out)
     }
 
     // Grow the file descriptor table if needed.
+    gettimeofday(&start_time, NULL);
     rwlock_wrlock(&ft->lock);
     if (!fd_table_grow(ft, in, 1)) {
         rwlock_unlock(&ft->lock);
@@ -712,6 +718,8 @@ fd_table_insert_existing(struct fd_table *ft, __wasi_fd_t in, int out)
 
     fd_table_attach(ft, in, fo, rights_base, rights_inheriting);
     rwlock_unlock(&ft->lock);
+    gettimeofday(&end_time, NULL);
+    printf("wasi : lock && unlock table grow cost %ld us\n",(end_time.tv_sec - start_time.tv_sec) * 1000000 + (end_time.tv_usec - start_time.tv_usec));
     return true;
 }
 

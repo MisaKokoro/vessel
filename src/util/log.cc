@@ -1,14 +1,15 @@
 #include "util/log.h"
+#include "util/config.h"
 #include <string>
 namespace util {
-void initLogging(std::string logLevel) {
+void initLogging() {
     // Docs: https://github.com/gabime/spdlog/wiki/3.-Custom-formatting
-    spdlog::set_pattern("%^[%H:%M:%S] [%t] [%L]%$ %v");
+    spdlog::set_pattern("%^[%H:%M:%S] [%t] [%L] %$ %v");
 
     // Set the current level for the level for the default logger (note that the
     // minimum log level is determined in the header).
-    // const SystemConfig& conf = getSystemConfig();
-    if (logLevel == "trace") {
+    const SystemConfig& conf = getSystemConfig();
+    if (conf.log_level == "trace") {
         spdlog::set_level(spdlog::level::trace);
 
         // Check the minimum level permits trace logging
@@ -17,7 +18,7 @@ void initLogging(std::string logLevel) {
           "Logging set to trace but minimum log level set too high ({})",
           SPDLOG_ACTIVE_LEVEL);
 #endif
-    } else if (logLevel == "debug") {
+    } else if (conf.log_level == "debug") {
         spdlog::set_level(spdlog::level::debug);
 
         // Check the minimum level permits debug logging

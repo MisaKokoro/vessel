@@ -6,6 +6,7 @@ add_library(
     gid.cc
     memory.cc
     log.cc
+    config.cc
 )
 
 set(ALL_OBJECT_FILES

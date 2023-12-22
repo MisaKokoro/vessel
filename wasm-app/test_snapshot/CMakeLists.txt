@@ -1,0 +1,1 @@
+add_executable(snapshot.wasm test_snapshot.cc)

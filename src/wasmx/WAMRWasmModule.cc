@@ -5,10 +5,13 @@
 #include "util/log.h"
 #include "util/file.h"
 #include "util/ScopeTime.h"
+#include "util/config.h"
 
 namespace wasm {
 
 static bool wamr_initialised = false;
+
+static uint8_t pool_buffer[40 * 1024 * 1024];
 
 void WAMRWasmModule::initialiseWAMRGlobally() {
     if (wamr_initialised) {
@@ -19,10 +22,17 @@ void WAMRWasmModule::initialiseWAMRGlobally() {
     memset(&initArgs, 0, sizeof(RuntimeInitArgs));
     // Memory configuration 先使用系统的malloc函数作为分配函数
     // 后续增加可选内存池模式
-    initArgs.mem_alloc_type = Alloc_With_Allocator;
-    initArgs.mem_alloc_option.allocator.malloc_func = (void*)::malloc;
-    initArgs.mem_alloc_option.allocator.realloc_func = (void*)::realloc;
-    initArgs.mem_alloc_option.allocator.free_func = (void*)::free;
+    const util::SystemConfig &conf = util::getSystemConfig();
+    if (conf.wasm_memory_mode == "system_alloc") {
+        initArgs.mem_alloc_type = Alloc_With_Allocator;
+        initArgs.mem_alloc_option.allocator.malloc_func = (void*)::malloc;
+        initArgs.mem_alloc_option.allocator.realloc_func = (void*)::realloc;
+        initArgs.mem_alloc_option.allocator.free_func = (void*)::free;
+    } else if (conf.wasm_memory_mode == "pool") {
+        initArgs.mem_alloc_type = Alloc_With_Pool;
+        initArgs.mem_alloc_option.pool.heap_buf = pool_buffer;
+        initArgs.mem_alloc_option.pool.heap_size = sizeof(pool_buffer);
+    }
 
     bool success = wasm_runtime_full_init(&initArgs);
     if (!success) {

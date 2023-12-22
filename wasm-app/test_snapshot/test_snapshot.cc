@@ -1,6 +1,7 @@
 #include <stdio.h>
 
 int data[1024] = {1, 2, 3, 4, 5, 6, 7, 8, 9 ,10};
+// int data2[1024] = {7,7,7,7,7,7,7,7,7,7,7};
 
 extern "C" {
 __attribute__((export_name("get_data_addr")))
@@ -12,6 +13,7 @@ __attribute__((export_name("mod_data")))
 void mod_data() {
     for (int i = 0; i < 10; i++) {
         data[i] = 10 - i;
+        // data2[i] = 10 - i;
     }
 }
 
@@ -19,6 +21,7 @@ __attribute__((export_name("show_data")))
 void show_data() {
     for (int i = 0; i < 10; i++) {
         printf("%d ", data[i]);
+        // printf("%d ", data2[i]);
     }
     printf("\n");
 }

@@ -703,6 +703,7 @@ memories_instantiate(AOTModuleInstance *module_inst, AOTModule *module,
         return true;
     }
 
+    gettimeofday(&start_time, NULL);
     for (i = 0; i < module->mem_init_data_count; i++) {
         data_seg = module->mem_init_data_list[i];
 #if WASM_ENABLE_BULK_MEMORY != 0
@@ -771,15 +772,14 @@ memories_instantiate(AOTModuleInstance *module_inst, AOTModule *module,
 #endif
             return false;
         }
-        gettimeofday(&start_time, NULL);
         if (memory_inst->memory_data) {
             bh_memcpy_s((uint8 *)memory_inst->memory_data + base_offset,
                         memory_inst->memory_data_size - base_offset,
                         data_seg->bytes, length);
         }
-        gettimeofday(&end_time, NULL);
-        printf("memcopy inst cost %ld us\n",(end_time.tv_sec - start_time.tv_sec) * 1000000 + (end_time.tv_usec - start_time.tv_usec));
     }
+    gettimeofday(&end_time, NULL);
+    printf("copy data section cost %ld us\n",(end_time.tv_sec - start_time.tv_sec) * 1000000 + (end_time.tv_usec - start_time.tv_usec));
 
     return true;
 }
@@ -1082,8 +1082,11 @@ aot_instantiate(AOTModule *module, bool is_sub_inst, uint32 stack_size,
     gettimeofday(&end_time, NULL);
     printf("mem inst cost %ld us\n",(end_time.tv_sec - start_time.tv_sec) * 1000000 + (end_time.tv_usec - start_time.tv_usec));
     /* Initialize function pointers */
+    gettimeofday(&start_time, NULL);
     if (!init_func_ptrs(module_inst, module, error_buf, error_buf_size))
         goto fail;
+    gettimeofday(&end_time, NULL);
+    printf("init func ptrs cost %ld us\n",(end_time.tv_sec - start_time.tv_sec) * 1000000 + (end_time.tv_usec - start_time.tv_usec));
 
     /* Initialize function type indexes */
     gettimeofday(&start_time, NULL);

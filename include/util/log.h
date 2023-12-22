@@ -23,5 +23,5 @@
 #include <string>
 
 namespace util {
-void initLog(std::string loglevel);
+void initLogging();
 }

@@ -1,0 +1,1 @@
+add_executable(hello.wasm main.c)
