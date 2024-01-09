@@ -5,6 +5,12 @@ set(WASI_SDK_DIR "/opt/wasi-sdk")
 set(CMAKE_CXX_COMPILER "${WASI_SDK_DIR}/bin/clang++")
 set(CMAKE_C_COMPILER "${WASI_SDK_DIR}/bin/clang")
 
+## 暂时没用
+# set(WASI_SDK_INSTALLTION_DIR "/opt/wasi-sdk")
+# set(WASI_SDK_PREFIX ${WASI_SDK_INSTALLTION_DIR})
+# set(CMAKE_TOOLCHAIN_FILE ${WASI_SDK_INSTALLTION_DIR}/share/cmake/wasi-sdk.cmake)
+# set(CMAKE_SYSROOT ${WASI_SDK_INSTALLTION_DIR}/share/wasi-sysroot)
+
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -fno-exceptions -z stack-size=409600")
 ## 不导出malloc和free函数会导致生成的wasm文件的page size 不是 64KB，然后会导致WAMRWasmModule.cc:186代码判断出错
 set (CMAKE_CXX_FLAGS                  "${CMAKE_CXX_FLAGS} -Wl,--export=malloc")
