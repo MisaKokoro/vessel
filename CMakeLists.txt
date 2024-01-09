@@ -48,7 +48,6 @@ set (CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
 add_subdirectory(src)
 add_subdirectory(wasm-app)
-add_subdirectory(testcase)
 add_subdirectory(tests/module_test)
 add_subdirectory(tests/wasmx_test)
 add_subdirectory(third_party)
