@@ -25,6 +25,9 @@ using namespace std;
 void *P;
 bool is_extern_mem = false;
 
+void func(Test t) {
+    
+}
 
 int main(int argc, char *argv[])
 {

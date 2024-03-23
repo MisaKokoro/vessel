@@ -1,2 +1,5 @@
 add_subdirectory(wasmx_test)
 add_subdirectory(module_test)
+add_subdirectory(uapbench_test)
+add_subdirectory(thread_test)
+add_subdirectory(cpubench_test)

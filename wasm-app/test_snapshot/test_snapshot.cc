@@ -12,7 +12,7 @@ int* get_data_addr() {
 __attribute__((export_name("mod_data")))
 void mod_data() {
     for (int i = 0; i < 10; i++) {
-        data[i] = 10 - i;
+        data[i] += 10;
         // data2[i] = 10 - i;
     }
 }

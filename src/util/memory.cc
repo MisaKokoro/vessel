@@ -62,6 +62,7 @@ void mapMemory(std::span<uint8_t> target, int fd, int flags) {
       target.data(), target.size(), PROT_READ | PROT_WRITE, flags, fd, 0);
 
     if (mmapRes == MAP_FAILED) {
+        perror("mmap failed");
         SPDLOG_ERROR("mapping memory to fd {} failed: {} ({})",
                      fd,
                      errno,

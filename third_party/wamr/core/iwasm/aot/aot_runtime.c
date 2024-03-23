@@ -690,7 +690,7 @@ memories_instantiate(AOTModuleInstance *module_inst, AOTModule *module,
             return false;
         }
         gettimeofday(&end_time, NULL);
-        printf("memory inst cost %ld us\n",(end_time.tv_sec - start_time.tv_sec) * 1000000 + (end_time.tv_usec - start_time.tv_usec));
+        // printf("memory inst cost %ld us\n",(end_time.tv_sec - start_time.tv_sec) * 1000000 + (end_time.tv_usec - start_time.tv_usec));
 
 
         module_inst->memories[i] = memory_inst;
@@ -779,7 +779,7 @@ memories_instantiate(AOTModuleInstance *module_inst, AOTModule *module,
         }
     }
     gettimeofday(&end_time, NULL);
-    printf("copy data section cost %ld us\n",(end_time.tv_sec - start_time.tv_sec) * 1000000 + (end_time.tv_usec - start_time.tv_usec));
+    // printf("copy data section cost %ld us\n",(end_time.tv_sec - start_time.tv_sec) * 1000000 + (end_time.tv_usec - start_time.tv_usec));
 
     return true;
 }
@@ -1063,7 +1063,7 @@ aot_instantiate(AOTModule *module, bool is_sub_inst, uint32 stack_size,
     if (!global_instantiate(module_inst, module, error_buf, error_buf_size))
         goto fail;
     gettimeofday(&end_time, NULL);
-    printf("global inst cost %ld us\n",(end_time.tv_sec - start_time.tv_sec) * 1000000 + (end_time.tv_usec - start_time.tv_usec));
+    // printf("global inst cost %ld us\n",(end_time.tv_sec - start_time.tv_sec) * 1000000 + (end_time.tv_usec - start_time.tv_usec));
     /* Initialize table info */
     p += module->global_data_size;
     module_inst->table_count = module->table_count + module->import_table_count;
@@ -1072,7 +1072,7 @@ aot_instantiate(AOTModule *module, bool is_sub_inst, uint32 stack_size,
                             error_buf, error_buf_size))
         goto fail;
     gettimeofday(&end_time, NULL);
-    printf("table init cost %ld us\n",(end_time.tv_sec - start_time.tv_sec) * 1000000 + (end_time.tv_usec - start_time.tv_usec));
+    // printf("table init cost %ld us\n",(end_time.tv_sec - start_time.tv_sec) * 1000000 + (end_time.tv_usec - start_time.tv_usec));
 
     /* Initialize memory space */
     gettimeofday(&start_time, NULL);
@@ -1080,27 +1080,27 @@ aot_instantiate(AOTModule *module, bool is_sub_inst, uint32 stack_size,
                               error_buf_size))
         goto fail;
     gettimeofday(&end_time, NULL);
-    printf("mem inst cost %ld us\n",(end_time.tv_sec - start_time.tv_sec) * 1000000 + (end_time.tv_usec - start_time.tv_usec));
+    // printf("mem inst cost %ld us\n",(end_time.tv_sec - start_time.tv_sec) * 1000000 + (end_time.tv_usec - start_time.tv_usec));
     /* Initialize function pointers */
     gettimeofday(&start_time, NULL);
     if (!init_func_ptrs(module_inst, module, error_buf, error_buf_size))
         goto fail;
     gettimeofday(&end_time, NULL);
-    printf("init func ptrs cost %ld us\n",(end_time.tv_sec - start_time.tv_sec) * 1000000 + (end_time.tv_usec - start_time.tv_usec));
+    // printf("init func ptrs cost %ld us\n",(end_time.tv_sec - start_time.tv_sec) * 1000000 + (end_time.tv_usec - start_time.tv_usec));
 
     /* Initialize function type indexes */
     gettimeofday(&start_time, NULL);
     if (!init_func_type_indexes(module_inst, module, error_buf, error_buf_size))
         goto fail;
     gettimeofday(&end_time, NULL);
-    printf("init func type index cost %ld us\n",(end_time.tv_sec - start_time.tv_sec) * 1000000 + (end_time.tv_usec - start_time.tv_usec));
+    // printf("init func type index cost %ld us\n",(end_time.tv_sec - start_time.tv_sec) * 1000000 + (end_time.tv_usec - start_time.tv_usec));
 
 
     gettimeofday(&start_time, NULL);
     if (!create_exports(module_inst, module, error_buf, error_buf_size))
         goto fail;
     gettimeofday(&end_time, NULL);
-    printf("create exports cost %ld us\n",(end_time.tv_sec - start_time.tv_sec) * 1000000 + (end_time.tv_usec - start_time.tv_usec));
+    // printf("create exports cost %ld us\n",(end_time.tv_sec - start_time.tv_sec) * 1000000 + (end_time.tv_usec - start_time.tv_usec));
 #if WASM_ENABLE_LIBC_WASI != 0
     if (!is_sub_inst) {
         gettimeofday(&start_time, NULL);
@@ -1117,7 +1117,7 @@ aot_instantiate(AOTModule *module, bool is_sub_inst, uint32 stack_size,
                 error_buf, error_buf_size))
             goto fail;
         gettimeofday(&end_time, NULL);
-        printf("wasi init cost %ld us\n",(end_time.tv_sec - start_time.tv_sec) * 1000000 + (end_time.tv_usec - start_time.tv_usec));
+        // printf("wasi init cost %ld us\n",(end_time.tv_sec - start_time.tv_sec) * 1000000 + (end_time.tv_usec - start_time.tv_usec));
         
     }
 #endif

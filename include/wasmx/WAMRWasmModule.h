@@ -25,14 +25,23 @@ public:
 
     uint8_t* wasmPointerToNative(uint32_t wasmPtr) override;
 
+    WASMModuleInstanceCommon* createNewInstance();
+
 
     WASMModuleInstanceCommon* getModuleInstance();
 
+    uint32_t allocWasmMemory(void **native_ptr,uint32_t size);
+
     int executeWasmFunction(const std::string& funcName);
 
+    int excuteWasmFunctiomWithArgv(const std::string& funcName, std::string &argv);
+
+    // void doBindToFunction(const std::string& msg, bool cache, WASMModuleCommon* module = nullptr);
     void doBindToFunction(const std::string& msg, bool cache) override;
 
     void printDebugInfo();
+
+    static int ExecuteWasmFuncWithInstacne(WASMModuleInstanceCommon *module_inst, const std::string &funcName);
 private:
     /**
      * @brief 
@@ -56,4 +65,7 @@ private:
     WASMModuleCommon* wasm_module_ = nullptr;
     WASMModuleInstanceCommon* module_instance_ = nullptr;
 };
+
+WASMModuleCommon* loadWasmFile(const std::string &path, std::vector<uint8_t>& wasm_bytes);
+
 }

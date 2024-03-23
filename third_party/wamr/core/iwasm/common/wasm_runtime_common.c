@@ -2488,7 +2488,7 @@ wasm_runtime_init_wasi(WASMModuleInstanceCommon *module_inst,
         goto fail;
     }
     gettimeofday(&end_time, NULL);
-    printf("wasi : copy argv and env cost %ld us\n",(end_time.tv_sec - start_time.tv_sec) * 1000000 + (end_time.tv_usec - start_time.tv_usec));
+    // printf("wasi : copy argv and env cost %ld us\n",(end_time.tv_sec - start_time.tv_sec) * 1000000 + (end_time.tv_usec - start_time.tv_usec));
 
 
     if (!(curfds = wasm_runtime_malloc(sizeof(struct fd_table)))
@@ -2546,7 +2546,7 @@ wasm_runtime_init_wasi(WASMModuleInstanceCommon *module_inst,
         goto fail;
     }
     gettimeofday(&end_time, NULL);
-    printf("wasi : curfds insert std init cost %ld us\n",(end_time.tv_sec - start_time.tv_sec) * 1000000 + (end_time.tv_usec - start_time.tv_usec));
+    // printf("wasi : curfds insert std init cost %ld us\n",(end_time.tv_sec - start_time.tv_sec) * 1000000 + (end_time.tv_usec - start_time.tv_usec));
 
 
     wasm_fd = 3;
@@ -2598,7 +2598,7 @@ wasm_runtime_init_wasi(WASMModuleInstanceCommon *module_inst,
         }
     }
     gettimeofday(&end_time, NULL);
-    printf("wasi : addrpool insert cost %ld us\n",(end_time.tv_sec - start_time.tv_sec) * 1000000 + (end_time.tv_usec - start_time.tv_usec));
+    // printf("wasi : addrpool insert cost %ld us\n",(end_time.tv_sec - start_time.tv_sec) * 1000000 + (end_time.tv_usec - start_time.tv_usec));
 
 
     gettimeofday(&start_time, NULL);
@@ -2609,7 +2609,7 @@ wasm_runtime_init_wasi(WASMModuleInstanceCommon *module_inst,
         goto fail;
     }
     gettimeofday(&end_time, NULL);
-    printf("wasi : copy ns pool cost %ld us\n",(end_time.tv_sec - start_time.tv_sec) * 1000000 + (end_time.tv_usec - start_time.tv_usec));
+    // printf("wasi : copy ns pool cost %ld us\n",(end_time.tv_sec - start_time.tv_sec) * 1000000 + (end_time.tv_usec - start_time.tv_usec));
 
 
     wasi_ctx->curfds = curfds;
